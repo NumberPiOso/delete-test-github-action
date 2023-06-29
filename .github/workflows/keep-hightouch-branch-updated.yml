@@ -1,0 +1,27 @@
+# This action is a complement to action `create-pr-diverged-hightouch-docs.yml`
+# It keeps the branch updated so hightouch can use it as base for updating
+# documentation.
+name: Fast forward merge hightouch-automatic-add-exposures into dev
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  auto_merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: hightouch-automatic-add-exposures
+
+      - name: Merge branch
+        run: git merge --ff-only origin/dev
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: hightouch-automatic-add-exposures
